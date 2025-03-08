@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spam Email Classifier</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin-top: 50px;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .form-control {
+      border-radius: 10px;
+      border: 2px solid #e0e6ed;
+      padding: 12px;
+      transition: all 0.3s ease;
+    }
+    .form-control:focus {
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.1);
+    }
+    .btn-classify {
+      background: linear-gradient(45deg, #4a90e2, #357abd);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 25px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    .btn-classify:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+    }
+    .result {
+      border-radius: 12px;
+      border: none;
+      padding: 1.5rem;
+    }
+    .result.spam {
+      background: linear-gradient(45deg, #ff6b6b, #ee5253);
+      color: white;
+    }
+    .result.not-spam {
+      background: linear-gradient(45deg, #20bf6b, #0fb9b1);
+      color: white;
+    }
+    .icon-container {
+      margin-bottom: 1.5rem;
+    }
+    .icon-container i {
+      font-size: 2.5rem;
+      color: #4a90e2;
+    }
+    .footer {
+      margin-top: 40px;
+      padding: 20px;
+      color: #6c757d;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .container {
+        margin-top: 20px;
+        padding: 0 20px;
+      }
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="text-center icon-container">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <h1 class="text-center mb-4">Email Spam Detector</h1>
+      <p class="text-center text-muted mb-4">Analyze your email content to detect potential spam messages</p>
+      
+      <form method="POST" class="needs-validation" novalidate>
+        <div class="mb-4">
+          <label class="form-label">Email Content</label>
+          <textarea 
+            class="form-control" 
+            name="message" 
+            rows="6" 
+            placeholder="Paste your email content here..."
+            required></textarea>
+          <div class="invalid-feedback">
+            Please provide email content for analysis.
+          </div>
+        </div>
+        <div class="d-grid gap-2">
+          <button class="btn btn-classify" type="submit">
+            <i class="fas fa-search me-2"></i>Analyze Content
+          </button>
+        </div>
+      </form>
+
+      {% if prediction is not none %}
+      <div class="result mt-4 {% if prediction == 'Spam' %}spam{% else %}not-spam{% endif %}">
+        <div class="d-flex align-items-center">
+          <i class="fas {% if prediction == 'Spam' %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %} me-3"></i>
+          <div>
+            <h4 class="mb-2">{{ prediction }}</h4>
+            <p class="mb-0"><strong>Analyzed Text:</strong><br>{{ user_input[:100] }}...</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="footer">
+      <div class="row">
+        <div class="col-12">
+          <p class="mb-0">
+            <i class="fas fa-code me-2"></i>
+            Powered by AI Technology
+          </p>
+          <small>&copy; 2025 Spam Classifier. All rights reserved.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Form validation
+    (() => {
+      'use strict'
+      const forms = document.querySelectorAll('.needs-validation')
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+  </script>
+</body>
+</html>
